@@ -7,7 +7,6 @@
  */
 
 import acm.program.*;
-import java.util.*;
 
 public class CS106A_CreateRegularPlural extends ConsoleProgram
 {
