@@ -7,14 +7,14 @@
  */
 
 import acm.program.*;
-
-enum Plurality { 
-	s,x,z,
-}
+import java.util.*;
 
 public class CS106A_CreateRegularPlural extends ConsoleProgram
 {
 	private static final String SENTINEL = "ENDPROGRAM";
+	private static final Character[] lastLetterCases = {'s','x','z'};
+	private static final String[] lastTwoLettersCases = {"ch","sh"};
+	private static final Character[] yPrecendentCases = {'a','e','i','o','u'};
 	
 	public void run()
 	{
@@ -36,12 +36,9 @@ public class CS106A_CreateRegularPlural extends ConsoleProgram
 	{
 		while(true){
 			String clientInput = readLine("Enter a word: ");
-			if(clientInput.equals(SENTINEL)){
-				println("goodbye.");
-				return;
-			}
+			if(clientInput.equals(SENTINEL)){ println("goodbye."); return; }
 			if (checkClientInputValidityFor(clientInput)){ 
-				createRegularPlural(clientInput);
+				println(createRegularPlural(clientInput));
 			}
 			else { 
 				println("Invalid input. Please try again. One word only. No numbers. " +
@@ -54,6 +51,7 @@ public class CS106A_CreateRegularPlural extends ConsoleProgram
 	
 	private boolean checkClientInputValidityFor(String word)
 	{
+		if (word.length() == 0) { return false; } 
 		for (int i = 0; i < word.length(); i++){
 			boolean firstCase = word.charAt(i) < 65 || word.charAt(i) > 90;
 			boolean secondCase = word.charAt(i) < 97 || word.charAt(i) > 122;
@@ -65,14 +63,28 @@ public class CS106A_CreateRegularPlural extends ConsoleProgram
 	
 	private String createRegularPlural(String word)
 	{
-		String pluralStr = "";
-		Character ending = word.toLowerCase().charAt(word.length() - 1);
-		Character precedingLetter = word.toLowerCase().charAt(word.length() - 2);
-		boolean endCase1 = precedingLetter.equals('s');
-		boolean endCase2 = precedingLetter.equals('c');
-		if(ending.equals('h') && ( endCase1 || endCase2) ){
-			
+		String lastTwoLetters = word.substring(word.length()-2).toLowerCase();
+		Character lastLetter = Character.toLowerCase(word.charAt(word.length()-1));
+		Character secondToLastLetter = Character.toLowerCase(word.charAt(word.length()-2));
+		
+		for (Character instance : lastLetterCases){
+			if (lastLetter.equals(instance)){
+				return word + "es";
+			}
 		}
-		return "";
+		
+		for (String instance : lastTwoLettersCases){
+			if (lastTwoLetters.equals(instance)){
+				return word + "es";
+			}
+		}
+		
+		for (Character instance : yPrecendentCases){
+			if (lastLetter.equals('y') && secondToLastLetter.equals(instance)){
+				return word.substring(0, word.length()-2) + "ies";
+			}
+		}
+		
+		return word + "s";
 	}
 }
